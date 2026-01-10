@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Алина — визажист-стилист. Индивидуальные образы без шаблонов + обучение визажу с нуля до первых клиентов. Россошь.">
+    <title>Алина — Визажист-стилист | Макияж и обучение</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* =====================================================
+           DESIGN SYSTEM
+        ===================================================== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* Colors - palette adapted for makeup artist */
+            --color-bg: #fcf4eb;
+            --color-text: #2c2525;
+            --color-text-muted: #998f84;
+            --color-accent: #e9a8a0;
+            --color-accent-2: #d4a5c4;
+            --color-white: #ffffff;
+            --color-border: rgba(44, 37, 37, 0.15);
+            --color-border-light: rgba(44, 37, 37, 0.08);
+
+            /* Typography */
+            --font-heading: 'Playfair Display', Georgia, serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            /* Spacing */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2.5rem;
+            --space-xl: 4rem;
+            --space-2xl: 6rem;
+            --space-3xl: 10rem;
+
+            /* Misc */
+            --radius: 8px;
+            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --max-width: 1200px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--color-text);
+            background-color: var(--color-bg);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* Typography - uppercase headings */
+        h1,
+        h2,
+        h3 {
+            font-family: var(--font-heading);
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            line-height: 1.1;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 6vw, 4.5rem);
+        }
+
+        h2 {
+            font-size: clamp(1.75rem, 4vw, 3.5rem);
+        }
+
+        h3 {
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+        }
+
+        p {
+            margin-bottom: var(--space-sm);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 var(--space-xl);
+            }
+        }
+
+        /* Ghost Button */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            color: var(--color-text);
+            background-color: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background-color: var(--color-accent);
+            border-radius: inherit;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            transform: scaleX(1);
+        }
+
+        .btn:hover {
+            border-color: var(--color-accent);
+        }
+
+        .btn-arrow {
+            transition: transform var(--transition);
+        }
+
+        .btn:hover .btn-arrow {
+            transform: translateX(4px);
+        }
+
+        .btn--filled {
+            background-color: var(--color-accent);
+            border-color: var(--color-accent);
+        }
+
+        .btn--filled::before {
+            background-color: var(--color-text);
+        }
+
+        .btn--filled:hover {
+            color: var(--color-white);
+            border-color: var(--color-text);
+        }
+
+        /* Section Label */
+        .section-label {
+            display: block;
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-md);
+        }
+
+        /* =====================================================
+           NAVIGATION - Sticky Header
+        ===================================================== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: var(--space-md) 0;
+            background-color: transparent;
+            transition: background-color var(--transition), backdrop-filter var(--transition);
+        }
+
+        .nav.scrolled {
+            background-color: rgba(252, 244, 235, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .nav__inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav__logo {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .nav__links {
+            display: none;
+            gap: var(--space-lg);
+            list-style: none;
+        }
+
+        @media (min-width: 768px) {
+            .nav__links {
+                display: flex;
+            }
+        }
+
+        .nav__link {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--color-text-muted);
+            transition: color var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav__link:hover {
+            color: var(--color-text);
+        }
+
+        .nav__cta {
+            font-size: 0.75rem;
+            padding: 0.75rem 1.5rem;
+        }
+
+        /* =====================================================
+           HERO - Full-screen zoom on scroll
+        ===================================================== */
+
+        /* Wrapper for scroll-based animation */
+        .hero-wrapper {
+            height: 200vh;
+            /* Extra height for scroll animation */
+            position: relative;
+        }
+
+        .hero {
+            height: 100vh;
+            height: 100svh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            top: 0;
+            overflow: hidden;
+            background-color: var(--color-bg);
+        }
+
+        /* Background gradient */
+        .hero__bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 40%, rgba(233, 168, 160, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 20% 60%, rgba(212, 165, 196, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero__container {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto auto;
+            gap: var(--space-lg);
+            justify-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: var(--max-width);
+            padding: 0 var(--space-md);
+            transition: opacity 0.3s ease;
+        }
+
+        .hero__container.fading {
+            opacity: 0;
+        }
+
+        @media (min-width: 900px) {
+            .hero__container {
+                grid-template-columns: 1fr auto 1fr;
+                grid-template-rows: auto auto;
+                align-items: center;
+                text-align: left;
+                gap: var(--space-xl);
+            }
+        }
+
+        /* Label - hidden initially to avoid nav overlap */
+        .hero__label {
+            display: none;
+            /* Hidden to avoid nav overlap */
+        }
+
+        /* Left side - now TITLE (swapped) */
+        .hero__left {
+            order: 1;
+            max-width: 380px;
+        }
+
+        @media (min-width: 900px) {
+            .hero__left {
+                order: 0;
+                grid-column: 1;
+                grid-row: 2;
+                justify-self: end;
+                text-align: right;
+                padding-right: var(--space-lg);
+            }
+        }
+
+        .hero__title {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            line-height: 1.2;
+        }
+
+        /* Center - Portrait (becomes fullscreen on scroll) */
+        .hero__visual {
+            order: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (min-width: 900px) {
+            .hero__visual {
+                order: 0;
+                grid-column: 2;
+                grid-row: 2;
+            }
+        }
+
+        .hero__portrait {
+            position: relative;
+            width: clamp(220px, 30vw, 350px);
+            height: clamp(300px, 45vw, 500px);
+            border-radius: 200px;
+            overflow: hidden;
+            box-shadow:
+                0 60px 120px rgba(44, 37, 37, 0.08),
+                0 30px 60px rgba(44, 37, 37, 0.04);
+        }
+
+        /* Fixed portrait overlay for fullscreen zoom */
+        .hero__portrait-fixed {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            overflow: hidden;
+            pointer-events: none;
+            visibility: hidden;
+            opacity: 0;
+            border-radius: 200px;
+            transition: border-radius 0.3s ease, opacity 0.2s ease, visibility 0s 0.2s;
+            will-change: width, height, border-radius, opacity;
+        }
+
+        .hero__portrait-fixed.active {
+            visibility: visible;
+            opacity: 1;
+            transition: border-radius 0.3s ease, opacity 0.2s ease, visibility 0s 0s;
+        }
+
+        .hero__portrait-fixed.fullscreen {
+            border-radius: 0;
+        }
+
+        /* Hide navigation when hero is expanding */
+        .nav {
+            transition: background-color var(--transition), backdrop-filter var(--transition), opacity 0.3s ease;
+        }
+
+        .nav.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .hero__portrait img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+
+        .hero__portrait-fixed img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 20%;
+        }
+
+        /* Right side - now SUBTITLE (swapped) */
+        .hero__right {
+            order: 3;
+            max-width: 350px;
+        }
+
+        @media (min-width: 900px) {
+            .hero__right {
+                order: 0;
+                grid-column: 3;
+                grid-row: 2;
+                justify-self: start;
+                text-align: left;
+                padding-left: var(--space-lg);
+            }
+        }
+
+        .hero__subtitle {
+            font-size: clamp(1rem, 1.8vw, 1.25rem);
+            color: var(--color-text-muted);
+            line-height: 1.7;
+        }
+
+        /* CTA */
+        .hero__cta {
+            order: 4;
+            grid-column: 1 / -1;
+            margin-top: var(--space-md);
+        }
+
+        @media (min-width: 900px) {
+            .hero__cta {
+                grid-row: 3;
+                margin-top: var(--space-lg);
+            }
+        }
+
+        /* =====================================================
+           STATEMENT / QUOTE SECTION
+        ===================================================== */
+        .statement {
+            padding: var(--space-2xl) 0;
+            background-color: var(--color-white);
+            text-align: center;
+        }
+
+        .statement__text {
+            font-family: var(--font-heading);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-style: italic;
+            font-weight: 400;
+            line-height: 1.5;
+            max-width: 900px;
+            margin: 0 auto;
+            color: var(--color-text);
+        }
+
+        .statement__text::before {
+            content: '« ';
+            color: var(--color-accent);
+        }
+
+        .statement__text::after {
+            content: ' »';
+            color: var(--color-accent);
+        }
+
+        /* =====================================================
+           PORTFOLIO - Vertical Cards Grid
+        ===================================================== */
+        .portfolio {
+            padding: var(--space-2xl) 0 var(--space-3xl);
+            background-color: var(--color-bg);
+        }
+
+        .portfolio__header {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media (min-width: 768px) {
+            .portfolio__header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-end;
+            }
+        }
+
+        .portfolio__title {
+            max-width: 500px;
+        }
+
+        .portfolio__desc {
+            max-width: 350px;
+            font-size: 0.95rem;
+            color: var(--color-text-muted);
+            line-height: 1.7;
+        }
+
+        .portfolio__grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-sm);
+        }
+
+        @media (min-width: 768px) {
+            .portfolio__grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: var(--space-md);
+            }
+        }
+
+        .portfolio__item {
+            aspect-ratio: 3 / 4;
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+            background-color: var(--color-border-light);
+        }
+
+        .portfolio__item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition), filter var(--transition);
+        }
+
+        .portfolio__item:hover img {
+            transform: scale(1.05);
+            filter: brightness(1.05);
+        }
+
+        /* =====================================================
+           ABOUT SECTION - Asymmetric Layout
+        ===================================================== */
+        .about {
+            padding: var(--space-2xl) 0;
+            background-color: var(--color-white);
+        }
+
+        .about__grid {
+            display: grid;
+            gap: var(--space-xl);
+        }
+
+        @media (min-width: 900px) {
+            .about__grid {
+                grid-template-columns: 1fr 1fr;
+                align-items: start;
+            }
+        }
+
+        .about__content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .about__title {
+            margin-bottom: var(--space-sm);
+        }
+
+        .about__text {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--color-text);
+        }
+
+        .about__highlight {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .about__list {
+            list-style: none;
+            margin-top: var(--space-sm);
+        }
+
+        .about__list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: var(--space-xs);
+            font-size: 0.95rem;
+        }
+
+        .about__list li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+        }
+
+        .about__image {
+            aspect-ratio: 4 / 5;
+            border-radius: var(--radius);
+            overflow: hidden;
+            background-color: var(--color-bg);
+        }
+
+        .about__image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .about__meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--color-border-light);
+        }
+
+        .about__meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+        }
+
+        .about__meta-item svg {
+            width: 14px;
+            height: 14px;
+            opacity: 0.7;
+        }
+
+        /* =====================================================
+           PAINS / PROBLEMS SECTION
+        ===================================================== */
+        .pains {
+            padding: var(--space-2xl) 0;
+            background: linear-gradient(180deg, var(--color-white) 0%, var(--color-bg) 100%);
+        }
+
+        .pains__content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .pains__title {
+            margin-bottom: var(--space-xl);
+        }
+
+        .pains__grid {
+            display: grid;
+            gap: var(--space-sm);
+            text-align: left;
+        }
+
+        @media (min-width: 768px) {
+            .pains__grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-md);
+            }
+        }
+
+        .pains__item {
+            padding: var(--space-md);
+            background-color: var(--color-white);
+            border-radius: var(--radius);
+            border-left: 3px solid var(--color-accent);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .pains__resolve {
+            margin-top: var(--space-xl);
+            padding: var(--space-md) var(--space-lg);
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-2) 100%);
+            border-radius: var(--radius);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* =====================================================
+           SERVICES SECTION
+        ===================================================== */
+        .services {
+            padding: var(--space-2xl) 0;
+            background-color: var(--color-bg);
+        }
+
+        .services__header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .services__title {
+            margin-bottom: var(--space-sm);
+        }
+
+        .services__grid {
+            display: grid;
+            gap: var(--space-md);
+        }
+
+        @media (min-width: 768px) {
+            .services__grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-lg);
+            }
+        }
+
+        .services__card {
+            padding: var(--space-lg);
+            background-color: var(--color-white);
+            border-radius: var(--radius);
+            border: 1px solid var(--color-border-light);
+            transition: border-color var(--transition), box-shadow var(--transition);
+        }
+
+        .services__card:hover {
+            border-color: var(--color-accent);
+            box-shadow: 0 20px 60px rgba(44, 37, 37, 0.06);
+        }
+
+        .services__card-title {
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            margin-bottom: var(--space-md);
+        }
+
+        .services__list {
+            list-style: none;
+            margin-bottom: var(--space-md);
+        }
+
+        .services__list li {
+            padding: var(--space-xs) 0;
+            border-bottom: 1px solid var(--color-border-light);
+            font-size: 0.9rem;
+        }
+
+        .services__list li:last-child {
+            border-bottom: none;
+        }
+
+        .services__list--prices li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .services__price-value {
+            font-weight: 500;
+            color: var(--color-text);
+            white-space: nowrap;
+        }
+
+        .services__extra {
+            margin-top: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--color-border-light);
+        }
+
+        .services__extra-title {
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+        }
+
+        .services__price {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .services__cta {
+            text-align: center;
+            margin-top: var(--space-xl);
+        }
+
+        /* About Education Highlight */
+        .about__education {
+            margin-top: var(--space-md);
+            padding: var(--space-md);
+            background: linear-gradient(135deg, rgba(233, 168, 160, 0.15) 0%, rgba(212, 165, 196, 0.15) 100%);
+            border-radius: var(--radius);
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .about__education-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-xs);
+        }
+
+        .about__education-names {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--color-text);
+            margin: 0;
+        }
+
+        /* =====================================================
+           COURSE / EDUCATION SECTION
+        ===================================================== */
+        .course {
+            padding: var(--space-2xl) 0;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-2) 100%);
+        }
+
+        .course__content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .course__header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .course__label {
+            color: rgba(44, 37, 37, 0.6);
+        }
+
+        .course__title {
+            margin-bottom: var(--space-sm);
+        }
+
+        .course__intro {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .course__details {
+            display: grid;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media (min-width: 768px) {
+            .course__details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .course__block {
+            padding: var(--space-md);
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: var(--radius);
+            text-align: left;
+        }
+
+        .course__block-title {
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-sm);
+        }
+
+        .course__block ul {
+            list-style: none;
+        }
+
+        .course__block li {
+            position: relative;
+            padding-left: 1.25rem;
+            margin-bottom: var(--space-xs);
+            font-size: 0.9rem;
+        }
+
+        .course__block li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+        }
+
+        .course__meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .course__meta-item {
+            padding: var(--space-sm) var(--space-md);
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+
+        .course__meta-item strong {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .course__meta-item span {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+        }
+
+        .course__cta {
+            text-align: center;
+        }
+
+        /* =====================================================
+           REVIEWS SECTION
+        ===================================================== */
+        .reviews {
+            padding: var(--space-2xl) 0;
+            background-color: var(--color-white);
+        }
+
+        .reviews__header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .reviews__grid {
+            display: grid;
+            gap: var(--space-md);
+        }
+
+        @media (min-width: 768px) {
+            .reviews__grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .reviews__card {
+            padding: var(--space-lg);
+            background-color: var(--color-bg);
+            border-radius: var(--radius);
+        }
+
+        .reviews__text {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.7;
+            margin-bottom: var(--space-md);
+        }
+
+        .reviews__author {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-accent);
+        }
+
+        /* =====================================================
+           FINAL CTA SECTION
+        ===================================================== */
+        .final-cta {
+            padding: var(--space-3xl) 0;
+            text-align: center;
+            background: linear-gradient(180deg, var(--color-white) 0%, var(--color-bg) 100%);
+        }
+
+        .final-cta__content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .final-cta__title {
+            margin-bottom: var(--space-md);
+        }
+
+        .final-cta__text {
+            font-size: 1rem;
+            color: var(--color-text-muted);
+            margin-bottom: var(--space-lg);
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+        .footer {
+            padding: var(--space-xl) 0;
+            background-color: var(--color-bg);
+            border-top: 1px solid var(--color-border-light);
+        }
+
+        .footer__inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-md);
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .footer__inner {
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+            }
+        }
+
+        .footer__logo {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .footer__links {
+            display: flex;
+            gap: var(--space-md);
+        }
+
+        .footer__link {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            transition: color var(--transition);
+        }
+
+        .footer__link:hover {
+            color: var(--color-accent);
+        }
+
+        .footer__copy {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+        }
+
+        /* =====================================================
+           UTILITIES
+        ===================================================== */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="container">
+            <div class="nav__inner">
+                <a href="#" class="nav__logo">Алина</a>
+                <ul class="nav__links">
+                    <li><a href="#portfolio" class="nav__link">Портфолио</a></li>
+                    <li><a href="#about" class="nav__link">Обо мне</a></li>
+                    <li><a href="#services" class="nav__link">Услуги</a></li>
+                    <li><a href="#course" class="nav__link">Обучение</a></li>
+                </ul>
+                <a href="https://wa.me/79397753403" class="btn nav__cta">Записаться</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero with scroll-zoom wrapper -->
+    <div class="hero-wrapper" id="heroWrapper">
+        <header class="hero" id="hero">
+            <div class="hero__bg"></div>
+            <div class="hero__container container" id="heroContent">
+                <span class="hero__label">Визажист-стилист · Россошь</span>
+
+                <!-- Left: Title (swapped) -->
+                <div class="hero__left">
+                    <h1 class="hero__title">Макияж, в&nbsp;котором вы&nbsp;узнаёте себя</h1>
+                </div>
+
+                <!-- Center: Portrait -->
+                <div class="hero__visual">
+                    <div class="hero__portrait" id="heroPortrait">
+                        <img src="hero1.png" alt="Алина — визажист-стилист" id="heroFace" loading="eager">
+                    </div>
+                </div>
+
+                <!-- Right: Subtitle (swapped) -->
+                <div class="hero__right">
+                    <p class="hero__subtitle">Индивидуальные образы без шаблонов + обучение визажу с&nbsp;нуля
+                        до&nbsp;первых клиентов</p>
+                </div>
+
+                <!-- CTA -->
+                <div class="hero__cta">
+                    <a href="https://wa.me/79397753403" class="btn btn--filled">
+                        Записаться
+                        <span class="btn-arrow">→</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <main>
+        <!-- Statement -->
+        <section class="statement">
+            <div class="container">
+                <p class="statement__text">Здесь создают макияж, которому доверяют — и&nbsp;профессию, с&nbsp;которой
+                    начинают зарабатывать</p>
+            </div>
+        </section>
+
+        <!-- Portfolio -->
+        <section class="portfolio" id="portfolio">
+            <div class="container">
+                <div class="portfolio__header">
+                    <div>
+                        <span class="section-label">Портфолио</span>
+                        <h2 class="portfolio__title">Образы, которые не&nbsp;требуют объяснений</h2>
+                    </div>
+                    <p class="portfolio__desc">Живые лица, чистая кожа, стойкость и&nbsp;естественность — именно
+                        за&nbsp;это меня выбирают снова и&nbsp;снова.</p>
+                </div>
+                <div class="portfolio__grid">
+                    <div class="portfolio__item">
+                        <img src="portfolio/01.webp" alt="Работа визажиста" loading="lazy" width="400" height="533">
+                    </div>
+                    <div class="portfolio__item">
+                        <img src="portfolio/02.webp" alt="Работа визажиста" loading="lazy" width="400" height="533">
+                    </div>
+                    <div class="portfolio__item">
+                        <img src="portfolio/03.webp" alt="Работа визажиста" loading="lazy" width="400" height="533">
+                    </div>
+                    <div class="portfolio__item">
+                        <img src="portfolio/04.webp" alt="Работа визажиста" loading="lazy" width="400" height="533">
+                    </div>
+                    <div class="portfolio__item">
+                        <img src="portfolio/05.webp" alt="Работа визажиста" loading="lazy" width="400" height="533">
+                    </div>
+                    <div class="portfolio__item">
+                        <img src="portfolio/06.webp" alt="Работа визажиста" loading="lazy" width="400" height="533">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About -->
+        <section class="about" id="about">
+            <div class="container">
+                <div class="about__grid">
+                    <div class="about__content">
+                        <span class="section-label">Обо мне</span>
+                        <h2 class="about__title">Визаж — это не&nbsp;маска. Это инструмент уверенности</h2>
+                        <p class="about__text">Меня зовут Алина, я&nbsp;визажист-стилист с&nbsp;опытом 2&nbsp;года.
+                            Работаю со&nbsp;свадебными, вечерними и&nbsp;коммерческими образами в&nbsp;Россоши.</p>
+                        <p class="about__text">Моя философия — никаких шаблонов. Я&nbsp;всегда отталкиваюсь
+                            от&nbsp;вашей внешности, кожи, черт лица и&nbsp;задачи события.</p>
+                        <p class="about__text">Работаю на&nbsp;люксовой косметике: <span class="about__highlight">Dior,
+                                Tom Ford, Charlotte Tilbury, Guerlain, MAC</span> — и&nbsp;знаю, как сделать макияж,
+                            который:</p>
+                        <ul class="about__list">
+                            <li>держится весь день</li>
+                            <li>выглядит естественно при любом освещении</li>
+                            <li>не ощущается на лице</li>
+                        </ul>
+                        <div class="about__education">
+                            <p class="about__education-label">Обучалась у мастеров:</p>
+                            <p class="about__education-names">Sasha Lopatina, Elena Menshik</p>
+                        </div>
+                        <div class="about__meta">
+                            <div class="about__meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+                                <span>ул. Малиновского, 25а</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about__image">
+                        <img src="2.png" alt="Алина за работой" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pains -->
+        <section class="pains">
+            <div class="container">
+                <div class="pains__content">
+                    <h2 class="pains__title">Знакомо?</h2>
+                    <div class="pains__grid">
+                        <div class="pains__item">
+                            <p>Боюсь выглядеть неестественно — слишком ярко, плотно, «не&nbsp;как&nbsp;я»</p>
+                        </div>
+                        <div class="pains__item">
+                            <p>Переживаю, что макияж «поплывёт» к&nbsp;середине дня или на&nbsp;фото будет смотреться
+                                плохо</p>
+                        </div>
+                        <div class="pains__item">
+                            <p>Хочу выглядеть лучшей версией себя, а&nbsp;не&nbsp;загримированной куклой</p>
+                        </div>
+                        <div class="pains__item">
+                            <p>Не&nbsp;понимаю, что мне идёт — боюсь ошибиться с&nbsp;образом на&nbsp;важное событие</p>
+                        </div>
+                    </div>
+                    <p class="pains__resolve">Всё это — не про мой подход. Я&nbsp;создаю образы, в&nbsp;которых
+                        вы&nbsp;узнаёте себя.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services -->
+        <section class="services" id="services">
+            <div class="container">
+                <div class="services__header">
+                    <span class="section-label">Услуги</span>
+                    <h2 class="services__title">Форматы работы</h2>
+                </div>
+                <div class="services__grid">
+                    <div class="services__card">
+                        <h3 class="services__card-title">Услуги визажиста</h3>
+                        <ul class="services__list services__list--prices">
+                            <li><span>Макияж (дневной/вечерний)</span><span class="services__price-value">3 000 ₽</span>
+                            </li>
+                            <li><span>Свадебный макияж</span><span class="services__price-value">4 000 ₽</span></li>
+                            <li><span>Полный образ (макияж + причёска)</span><span class="services__price-value">5 000
+                                    ₽</span></li>
+                            <li><span>Свадебный образ</span><span class="services__price-value">7 000 ₽</span></li>
+                        </ul>
+                        <div class="services__extra">
+                            <p class="services__extra-title">Дополнительно:</p>
+                            <ul class="services__list services__list--prices">
+                                <li><span>Выезд по городу</span><span class="services__price-value">2 000 ₽</span></li>
+                                <li><span>Запись до 8:00</span><span class="services__price-value">1 000 ₽</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="services__card">
+                        <h3 class="services__card-title">Обучение</h3>
+                        <ul class="services__list services__list--prices">
+                            <li><span>Курс «Макияж для себя» (однодневный)</span><span class="services__price-value">6
+                                    000 ₽</span></li>
+                            <li><span>Курс «Макияж для себя» (двухдневный)</span><span class="services__price-value">10
+                                    000 ₽</span></li>
+                            <li><span>Базовый курс «Визажист с 0»</span><span class="services__price-value">45 000
+                                    ₽</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="services__cta">
+                    <a href="https://wa.me/79397753403" class="btn">
+                        Уточнить формат и даты
+                        <span class="btn-arrow">→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Course -->
+        <section class="course" id="course">
+            <div class="container">
+                <div class="course__content">
+                    <div class="course__header">
+                        <span class="section-label course__label">Обучение</span>
+                        <h2 class="course__title">С&nbsp;нуля — в&nbsp;профессию</h2>
+                        <p class="course__intro">Этот курс для тех, кто хочет не&nbsp;просто научиться красить,
+                            а&nbsp;понять профессию визажиста и&nbsp;начать зарабатывать.</p>
+                    </div>
+                    <div class="course__details">
+                        <div class="course__block">
+                            <h4 class="course__block-title">Вы получите:</h4>
+                            <ul>
+                                <li>фундаментальные знания без воды</li>
+                                <li>максимум практики</li>
+                                <li>понимание, как работать с клиентами</li>
+                                <li>уверенность в себе и своих навыках</li>
+                            </ul>
+                        </div>
+                        <div class="course__block">
+                            <h4 class="course__block-title">Подходит, если:</h4>
+                            <ul>
+                                <li>вы никогда не держали кисти в руках</li>
+                                <li>боитесь конкуренции</li>
+                                <li>хотите творческую и гибкую профессию</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="course__cta">
+                        <a href="https://wa.me/79397753403?text=Хочу%20получить%20программу%20курса"
+                            class="btn btn--filled">
+                            Получить программу курса
+                            <span class="btn-arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reviews -->
+        <section class="reviews" id="reviews">
+            <div class="container">
+                <div class="reviews__header">
+                    <span class="section-label">Отзывы</span>
+                    <h2>Что говорят клиенты</h2>
+                </div>
+                <div class="reviews__grid">
+                    <div class="reviews__card">
+                        <p class="reviews__text">Хожу к&nbsp;Алине уже больше года на&nbsp;все важные события.
+                            И&nbsp;каждый раз — это волшебство. Она никогда не&nbsp;повторяется, но&nbsp;всегда делает
+                            именно «твой» идеальный макияж.</p>
+                        <p class="reviews__author">— Екатерина</p>
+                    </div>
+                    <div class="reviews__card">
+                        <p class="reviews__text">Искала визажиста на&nbsp;выпускной и&nbsp;очень волновалась — хотелось
+                            выглядеть взросло и&nbsp;стильно, но&nbsp;не&nbsp;перегружено. В&nbsp;итоге я&nbsp;была
+                            самой красивой!</p>
+                        <p class="reviews__author">— София</p>
+                    </div>
+                    <div class="reviews__card">
+                        <p class="reviews__text">Макияж выглядит безупречно в&nbsp;любом свете, не&nbsp;требует долгой
+                            ретуши и, что важно, не&nbsp;ощущается на&nbsp;лице маской. Обязательно вернусь снова.</p>
+                        <p class="reviews__author">— Вероника</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="final-cta">
+            <div class="container">
+                <div class="final-cta__content">
+                    <h2 class="final-cta__title">Готовы доверить свой образ?</h2>
+                    <p class="final-cta__text">Напишите мне — подберём формат, дату и&nbsp;образ именно под&nbsp;вашу
+                        задачу.</p>
+                    <a href="https://wa.me/79397753403" class="btn btn--filled">
+                        Написать в WhatsApp
+                        <span class="btn-arrow">→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__inner">
+                <a href="#" class="footer__logo">Алина</a>
+                <div class="footer__links">
+                    <a href="https://wa.me/79397753403" class="footer__link">+7 939 775-34-03</a>
+                    <a href="https://instagram.com/aalevtinkaa" target="_blank" rel="noopener"
+                        class="footer__link">Instagram</a>
+                </div>
+                <p class="footer__copy">© 2026 Алина — Визажист-стилист · Россошь</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sticky Navigation
+        (() => {
+            const nav = document.getElementById('nav');
+            if (!nav) return;
+
+            let lastScroll = 0;
+
+            const handleScroll = () => {
+                const currentScroll = window.scrollY;
+
+                if (currentScroll > 100) {
+                    nav.classList.add('scrolled');
+                } else {
+                    nav.classList.remove('scrolled');
+                }
+
+                lastScroll = currentScroll;
+            };
+
+            window.addEventListener('scroll', handleScroll, { passive: true });
+        })();
+
+        // Full-screen Zoom Effect
+        (() => {
+            const wrapper = document.getElementById('heroWrapper');
+            const portraitOriginal = document.getElementById('heroPortrait');
+            const content = document.getElementById('heroContent');
+            const hero = document.getElementById('hero');
+            const heroFace = document.getElementById('heroFace');
+            const nav = document.getElementById('nav');
+
+            if (!wrapper || !portraitOriginal || !content || !hero || !heroFace) return;
+
+            // Check for reduced motion preference
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReducedMotion) return;
+
+            // Create fixed portrait overlay
+            const fixedPortrait = document.createElement('div');
+            fixedPortrait.className = 'hero__portrait-fixed';
+            fixedPortrait.innerHTML = `<img src="${heroFace.src}" alt="${heroFace.alt}">`;
+            document.body.appendChild(fixedPortrait);
+
+            // Get initial portrait dimensions
+            const getInitialSize = () => {
+                const rect = portraitOriginal.getBoundingClientRect();
+                return {
+                    width: rect.width,
+                    height: rect.height
+                };
+            };
+
+            let initialSize = getInitialSize();
+            let ticking = false;
+
+            const updateZoom = () => {
+                const wrapperRect = wrapper.getBoundingClientRect();
+                const wrapperHeight = wrapper.offsetHeight;
+                const viewportHeight = window.innerHeight;
+                const viewportWidth = window.innerWidth;
+
+                // Calculate scroll progress (0 to 1) through the wrapper
+                const scrolled = -wrapperRect.top;
+                const scrollRange = wrapperHeight - viewportHeight;
+                const progress = Math.max(0, Math.min(1, scrolled / scrollRange));
+
+                // Calculate target size to fully cover viewport
+                // Use the larger of viewport dimensions to ensure full coverage
+                const aspectRatio = initialSize.width / initialSize.height;
+                let targetWidth, targetHeight;
+
+                // Calculate sizes needed to cover the viewport completely
+                // considering the aspect ratio of the original portrait
+                if (viewportWidth / viewportHeight > aspectRatio) {
+                    // Viewport is wider than portrait, scale by width
+                    targetWidth = viewportWidth * 1.05; // 5% extra for safety
+                    targetHeight = targetWidth / aspectRatio;
+                } else {
+                    // Viewport is taller than portrait, scale by height
+                    targetHeight = viewportHeight * 1.05;
+                    targetWidth = targetHeight * aspectRatio;
+                }
+
+                // Interpolate size based on progress
+                const currentWidth = initialSize.width + (targetWidth - initialSize.width) * progress;
+                const currentHeight = initialSize.height + (targetHeight - initialSize.height) * progress;
+
+                // Apply to fixed portrait
+                fixedPortrait.style.width = `${currentWidth}px`;
+                fixedPortrait.style.height = `${currentHeight}px`;
+
+                // Show/hide fixed portrait and original
+                if (progress > 0.02) {
+                    fixedPortrait.classList.add('active');
+                    portraitOriginal.style.opacity = '0';
+                } else {
+                    fixedPortrait.classList.remove('active');
+                    portraitOriginal.style.opacity = '1';
+                }
+
+                // Remove border-radius when expanding (earlier to ensure smooth transition)
+                if (progress > 0.2) {
+                    fixedPortrait.classList.add('fullscreen');
+                } else {
+                    fixedPortrait.classList.remove('fullscreen');
+                }
+
+                // Hide navigation earlier in the scroll to prevent text overlap
+                if (nav) {
+                    if (progress > 0.15) {
+                        nav.classList.add('hidden');
+                    } else {
+                        nav.classList.remove('hidden');
+                    }
+                }
+
+                // Fade out text content as zoom progresses
+                const fadeThreshold = 0.05;
+                if (progress > fadeThreshold) {
+                    const fadeProgress = Math.min(1, (progress - fadeThreshold) / 0.15);
+                    content.style.opacity = 1 - fadeProgress;
+                } else {
+                    content.style.opacity = 1;
+                }
+
+                // Hide fixed portrait after hero section ends
+                if (progress >= 0.98) {
+                    fixedPortrait.style.opacity = '0';
+                } else if (progress > 0.02) {
+                    fixedPortrait.style.opacity = '1';
+                }
+
+                ticking = false;
+            };
+
+            const onScroll = () => {
+                if (!ticking) {
+                    requestAnimationFrame(updateZoom);
+                    ticking = true;
+                }
+            };
+
+            // Recalculate on resize
+            window.addEventListener('resize', () => {
+                initialSize = getInitialSize();
+                updateZoom();
+            }, { passive: true });
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            updateZoom();
+        })();
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
