@@ -314,8 +314,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0.25;
-            /* Subtle visibility */
+            opacity: 0.3;
+            /* Increased visibility per request */
             mix-blend-mode: multiply;
         }
 
@@ -435,6 +435,8 @@
             z-index: 10;
             margin-bottom: var(--space-sm);
             /* Clear space for title below */
+            flex-direction: column;
+            /* Allow caption stacking */
         }
 
         @media (min-width: 900px) {
@@ -496,8 +498,10 @@
             letter-spacing: 0.08em;
             color: rgba(255, 255, 255, 0.9);
             opacity: 0;
-            transition: opacity 0.8s ease 0.2s;
-            /* Slight delay after fullscreen */
+            transform: scale(0.96);
+            /* Initial scale state */
+            transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+            /* Added scale transition */
             background: radial-gradient(ellipse at center,
                     rgba(0, 0, 0, 0.2) 0%,
                     rgba(0, 0, 0, 0.4) 70%);
@@ -506,6 +510,8 @@
 
         .hero__portrait-fixed.fullscreen .hero-zoom-text {
             opacity: 1;
+            transform: scale(1);
+            /* Smooth scale-in */
         }
 
         .hero-zoom-text span {
@@ -518,6 +524,17 @@
             font-size: clamp(1.6rem, 5vw, 3rem);
             font-weight: 400;
             line-height: 1.1;
+        }
+
+        /* Hero Caption */
+        .hero__caption {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-top: 0.75rem;
+            display: block;
+            text-align: center;
         }
 
         /* Hide navigation when hero is expanding */
@@ -968,6 +985,13 @@
         .course__content {
             max-width: 900px;
             margin: 0 auto;
+            background-color: var(--color-accent-2);
+            color: var(--color-text);
+            padding: var(--space-xl);
+            position: relative;
+            /* Accent border */
+            border-left: 3px solid rgba(255, 255, 255, 0.6);
+            /* padding-left: var(--space-lg); -- Included in padding-xl, but can be explicit if needed */
         }
 
         .course__header {
@@ -1237,8 +1261,9 @@
                 <!-- Center: Portrait -->
                 <div class="hero__visual">
                     <div class="hero__portrait" id="heroPortrait">
-                        <img src="hero1.jpg" alt="Алина — визажист-стилист" id="heroFace" loading="eager">
+                        <img src="hero1.jpg" alt="Портрет модели с естественным макияжем" id="heroFace">
                     </div>
+                    <span class="hero__caption">Визажист-стилист · Россошь</span>
                 </div>
 
                 <!-- Right: Subtitle (swapped) -->
@@ -1348,7 +1373,7 @@
                     <h2 class="pains__title">Знакомо?</h2>
                     <div class="pains__grid">
                         <div class="pains__item">
-                            <p>Боюсь выглядеть неестественно — слишком ярко, плотно, «не&nbsp;как&nbsp;я»</p>
+                            <p>Боюсь выглядеть неестественно — слишком ярко, плотно, не собой</p>
                         </div>
                         <div class="pains__item">
                             <p>Переживаю, что макияж «поплывёт» к&nbsp;середине дня или на&nbsp;фото будет смотреться
