@@ -428,6 +428,43 @@
             border-radius: 0;
         }
 
+        .hero-zoom-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(255, 255, 255, 0.9);
+            opacity: 0;
+            transition: opacity 0.8s ease 0.2s;
+            /* Slight delay after fullscreen */
+            background: radial-gradient(ellipse at center,
+                    rgba(0, 0, 0, 0.2) 0%,
+                    rgba(0, 0, 0, 0.4) 70%);
+            pointer-events: none;
+        }
+
+        .hero__portrait-fixed.fullscreen .hero-zoom-text {
+            opacity: 1;
+        }
+
+        .hero-zoom-text span {
+            font-size: clamp(0.8rem, 2vw, 1.1rem);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .hero-zoom-text strong {
+            font-size: clamp(1.6rem, 5vw, 3rem);
+            font-weight: 400;
+            line-height: 1.1;
+        }
+
         /* Hide navigation when hero is expanding */
         .nav {
             transition: background-color var(--transition), backdrop-filter var(--transition), opacity 0.3s ease;
@@ -1458,7 +1495,13 @@
             // Create fixed portrait overlay
             const fixedPortrait = document.createElement('div');
             fixedPortrait.className = 'hero__portrait-fixed';
-            fixedPortrait.innerHTML = `<img src="${heroFace.src}" alt="${heroFace.alt}">`;
+            fixedPortrait.innerHTML = `
+                <img src="${heroFace.src}" alt="${heroFace.alt}">
+                <div class="hero-zoom-text">
+                    <span>Макияж — это не маска.</span>
+                    <strong>Это уверенность.</strong>
+                </div>
+            `;
             document.body.appendChild(fixedPortrait);
 
             // Get initial portrait dimensions
