@@ -405,23 +405,23 @@
         /* Fixed portrait overlay for fullscreen zoom */
         .hero__portrait-fixed {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
             z-index: 2000;
             overflow: hidden;
             pointer-events: none;
             visibility: hidden;
             opacity: 0;
             border-radius: 200px;
-            transition: border-radius 0.3s ease, opacity 0.2s ease, visibility 0s 0.2s;
-            will-change: width, height, border-radius, opacity;
+            transition: border-radius 0.3s ease;
+            /* Removed opacity transition for instant hand-off */
+            will-change: width, height, transform, border-radius;
         }
 
         .hero__portrait-fixed.active {
             visibility: visible;
             opacity: 1;
-            transition: border-radius 0.3s ease, opacity 0.2s ease, visibility 0s 0s;
+            transition: border-radius 0.3s ease;
         }
 
         .hero__portrait-fixed.fullscreen {
@@ -1504,16 +1504,20 @@
             `;
             document.body.appendChild(fixedPortrait);
 
-            // Get initial portrait dimensions
-            const getInitialSize = () => {
+            // Get initial portrait state
+            const getInitialState = () => {
                 const rect = portraitOriginal.getBoundingClientRect();
                 return {
                     width: rect.width,
-                    height: rect.height
+                    height: rect.height,
+                    top: rect.top,
+                    left: rect.left,
+                    centerX: rect.left + rect.width / 2,
+                    centerY: rect.top + rect.height / 2
                 };
             };
 
-            let initialSize = getInitialSize();
+            let initialState = getInitialState();
             let ticking = false;
 
             const updateZoom = () => {
@@ -1544,21 +1548,32 @@
                     targetWidth = targetHeight * aspectRatio;
                 }
 
-                // Interpolate size based on progress
-                const currentWidth = initialSize.width + (targetWidth - initialSize.width) * progress;
-                const currentHeight = initialSize.height + (targetHeight - initialSize.height) * progress;
+                // Interpolate state based on progress
+                const currentWidth = initialState.width + (targetWidth - initialState.width) * progress;
+                const currentHeight = initialState.height + (targetHeight - initialState.height) * progress;
+
+                // Interpolate position from original center to viewport center
+                const targetCenterX = viewportWidth / 2;
+                const targetCenterY = viewportHeight / 2;
+                const currentCenterX = initialState.centerX + (targetCenterX - initialState.centerX) * progress;
+                const currentCenterY = initialState.centerY + (targetCenterY - initialState.centerY) * progress;
 
                 // Apply to fixed portrait
                 fixedPortrait.style.width = `${currentWidth}px`;
                 fixedPortrait.style.height = `${currentHeight}px`;
+                fixedPortrait.style.transform = `translate(${currentCenterX - currentWidth / 2}px, ${currentCenterY - currentHeight / 2}px)`;
 
                 // Show/hide fixed portrait and original
-                if (progress > 0.02) {
-                    fixedPortrait.classList.add('active');
-                    portraitOriginal.style.opacity = '0';
+                if (progress > 0.005) { // Smaller threshold for instant hand-off
+                    if (!fixedPortrait.classList.contains('active')) {
+                        fixedPortrait.classList.add('active');
+                        portraitOriginal.style.visibility = 'hidden';
+                    }
                 } else {
-                    fixedPortrait.classList.remove('active');
-                    portraitOriginal.style.opacity = '1';
+                    if (fixedPortrait.classList.contains('active')) {
+                        fixedPortrait.classList.remove('active');
+                        portraitOriginal.style.visibility = 'visible';
+                    }
                 }
 
                 // Remove border-radius when expanding (earlier to ensure smooth transition)
@@ -1605,7 +1620,7 @@
 
             // Recalculate on resize
             window.addEventListener('resize', () => {
-                initialSize = getInitialSize();
+                initialState = getInitialState();
                 updateZoom();
             }, { passive: true });
 
