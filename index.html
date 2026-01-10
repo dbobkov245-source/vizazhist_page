@@ -336,8 +336,10 @@
 
         /* Left side - now TITLE (swapped) */
         .hero__left {
-            order: 1;
+            order: 2;
+            /* Title after portrait on mobile */
             max-width: 380px;
+            padding: 0 var(--space-sm);
         }
 
         @media (min-width: 900px) {
@@ -348,22 +350,26 @@
                 justify-self: end;
                 text-align: right;
                 padding-right: var(--space-lg);
+                padding-left: 0;
             }
         }
 
         .hero__title {
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-size: clamp(1.5rem, 5vw, 2.8rem);
             line-height: 1.2;
         }
 
         /* Center - Portrait (becomes fullscreen on scroll) */
         .hero__visual {
-            order: 2;
+            order: 1;
+            /* Portrait first on mobile */
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
             z-index: 10;
+            margin-top: var(--space-xl);
+            /* Space from nav on mobile */
         }
 
         @media (min-width: 900px) {
@@ -371,6 +377,7 @@
                 order: 0;
                 grid-column: 2;
                 grid-row: 2;
+                margin-top: 0;
             }
         }
 
@@ -453,9 +460,16 @@
         }
 
         .hero__subtitle {
-            font-size: clamp(1rem, 1.8vw, 1.25rem);
+            font-size: clamp(0.9rem, 2vw, 1.25rem);
             color: var(--color-text-muted);
             line-height: 1.7;
+            padding: 0 var(--space-sm);
+        }
+
+        @media (min-width: 900px) {
+            .hero__subtitle {
+                padding: 0;
+            }
         }
 
         /* CTA */
