@@ -266,6 +266,60 @@
         }
 
         /* =====================================================
+           ANIMATED BACKGROUND
+        ===================================================== */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background-color: var(--color-bg);
+        }
+
+        .background-gradient {
+            position: absolute;
+            inset: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%,
+                    rgba(255, 255, 255, 0.8) 0%,
+                    rgba(233, 168, 160, 0.15) 30%,
+                    rgba(212, 165, 196, 0.15) 60%,
+                    rgba(230, 240, 255, 0.2) 80%);
+            filter: blur(80px);
+            animation: gradient-shift 25s ease-in-out infinite alternate;
+            opacity: 0.8;
+        }
+
+        @keyframes gradient-shift {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(-10%, -5%) scale(1.1);
+            }
+
+            100% {
+                transform: translate(5%, -10%) scale(1.05);
+            }
+        }
+
+        #background-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.25;
+            /* Subtle visibility */
+            mix-blend-mode: multiply;
+        }
+
+        /* =====================================================
            HERO - Full-screen zoom on scroll
         ===================================================== */
 
@@ -285,7 +339,8 @@
             position: sticky;
             top: 0;
             overflow: hidden;
-            background-color: var(--color-bg);
+            background-color: transparent;
+            /* Transparent to show animated bg */
             padding-top: 80px;
             /* Space for fixed nav on mobile */
         }
@@ -1145,6 +1200,12 @@
 </head>
 
 <body>
+    <!-- Animated Background -->
+    <div class="background-container">
+        <div class="background-gradient"></div>
+        <canvas id="background-canvas"></canvas>
+    </div>
+
     <!-- Navigation -->
     <nav class="nav" id="nav">
         <div class="container">
@@ -1641,6 +1702,89 @@
                 }
             });
         });
+
+        // Background Canvas Animation (Moving Lines)
+        (() => {
+            const canvas = document.getElementById('background-canvas');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let lines = [];
+
+            // Check for reduced motion
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReducedMotion) return;
+
+            const resize = () => {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                initLines();
+            };
+
+            class Line {
+                constructor(index) {
+                    this.index = index;
+                    this.reset();
+                }
+
+                reset() {
+                    this.amp = 50 + Math.random() * 100; // Amplitude
+                    this.period = 200 + Math.random() * 300; // Period
+                    this.speed = 0.001 + Math.random() * 0.003; // Speed
+                    this.phase = Math.random() * Math.PI * 2;
+                    this.y = (height / 10) * this.index + (Math.random() * 50); // Vertical position
+                    this.hue = Math.random() > 0.5 ? 10 : 330; // Close to brand colors (reddish/pink/orange)
+                    this.saturation = 20 + Math.random() * 40;
+                    this.lightness = 40 + Math.random() * 40;
+                }
+
+                update(time) {
+                    this.phase += this.speed;
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    for (let x = 0; x < width; x += 10) {
+                        const y = this.y + Math.sin((x / this.period) + this.phase) * this.amp + Math.cos((x / (this.period * 1.5)) + this.phase * 0.5) * (this.amp * 0.5);
+                        if (x === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    // Gradient stroke
+                    const gradient = ctx.createLinearGradient(0, this.y - 50, width, this.y + 50);
+                    gradient.addColorStop(0, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, 0)`);
+                    gradient.addColorStop(0.5, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, 0.5)`);
+                    gradient.addColorStop(1, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, 0)`);
+
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            }
+
+            const initLines = () => {
+                lines = [];
+                const numLines = Math.floor(height / 100); // 1 line per 100px height
+                for (let i = 0; i < numLines + 2; i++) {
+                    lines.push(new Line(i));
+                }
+            };
+
+            const animate = (time) => {
+                ctx.clearRect(0, 0, width, height);
+                lines.forEach(line => {
+                    line.update(time);
+                    line.draw();
+                });
+                requestAnimationFrame(animate);
+            };
+
+            window.addEventListener('resize', resize, { passive: true });
+            resize();
+            requestAnimationFrame(animate);
+        })();
     </script>
 </body>
 
