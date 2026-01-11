@@ -1043,15 +1043,18 @@ img {
 ===================================================== */
 .course {
     padding: var(--space-2xl) 0;
-    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-2) 100%);
+    background-color: var(--color-bg);
+    /* Unified background */
 }
 
 .course__content {
-    max-width: 900px;
+    max-width: var(--max-width);
     margin: 0 auto;
-    background-color: var(--color-accent-2);
+    background-color: transparent;
+    /* Remove nested box bg */
     color: var(--color-text);
-    padding: var(--space-xl);
+    padding: 0;
+    /* Remove nested padding */
     position: relative;
 }
 
@@ -1437,90 +1440,130 @@ img {
 /* =====================================================
    IMAGE MARQUEE / GALLERY SLIDER
 ===================================================== */
-.gallery-marquee {
-    padding: var(--space-2xl) 0;
-    background-color: var(--color-white);
+/* =====================================================
+   3D GALLERY COMPONENT
+===================================================== */
+.gallery-3d-section {
+    padding: var(--space-3xl) 0;
+    /* Keep it spacious */
+    background-color: transparent;
     overflow: hidden;
-    position: relative;
-    transform: rotate(-3deg) scale(1.1);
-    margin: var(--space-lg) 0;
-}
-
-/* Remove header styles - no longer needed */
-
-.gallery-marquee__track {
+    /* Prevent horizontal scrollbar if elements poke out */
     display: flex;
-    flex-wrap: nowrap;
-    gap: var(--space-md);
-    width: max-content;
-    animation: marquee 30s linear infinite;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* Make it full viewport height driven */
 }
 
-.gallery-marquee:hover .gallery-marquee__track {
-    animation-play-state: paused;
-}
-
-.gallery-marquee__item {
-    flex: 0 0 auto;
-    width: 280px;
-    height: 350px;
-    border-radius: var(--radius);
-    overflow: hidden;
+.gallery-3d-container {
     position: relative;
+    width: 100%;
+    max-width: 100%;
+    /* Allow full width */
+    height: 80vh;
+    /* Occupy most of the screen height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Center alignment */
+    padding-right: 0;
+    perspective: 1500px;
+    /* Deeper perspective for large items */
 }
 
-@media (min-width: 768px) {
-    .gallery-marquee__item {
-        width: 320px;
-        height: 400px;
+/* On mobile, we might need a different view or scale down */
+@media (max-width: 768px) {
+    .gallery-3d-container {
+        perspective: 1000px;
+        transform: none;
+        /* Reset distinct mobile scale, handle via responsive item sizes */
+        height: 60vh;
     }
 }
 
-.gallery-marquee__item img {
+.gallery-3d-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.gallery-3d-item {
+    position: absolute;
+    top: 50%;
+    /* Start off-screen or unpositioned; JS will place them immediately */
+    left: 0;
+    width: 460px;
+    /* Increased by 15% */
+    height: 690px;
+    /* Increased by 15% */
+    /* margin-top removed to avoid double-centering with JS translate(-50%) */
+
+    /* Responsive sizing */
+    max-width: 85vw;
+    /* Allow slightly wider on mobile */
+    max-height: 75vh;
+
+    transform-style: preserve-3d;
+    will-change: transform, opacity;
+    /* optimize for 60fps */
+    /* No transition here! We are using JS frame loop. */
+
+    border-radius: 30px;
+    /* More rounded corners */
+    overflow: hidden;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+    /* Increased shadow for scale */
+}
+
+.gallery-3d-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform var(--transition);
+    object-position: center top;
+    display: block;
 }
 
-.gallery-marquee__item:hover img {
-    transform: scale(1.05);
+/* 3rd behind */
+.gallery-3d-card.gallery-pos-3 {
+    z-index: 17;
+    transform: scale(0.84) translateX(-180px) rotateY(12deg);
+    filter: brightness(0.85);
+    opacity: 1;
 }
 
-/* Gradient masks for marquee edges */
-.gallery-marquee::before,
-.gallery-marquee::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100px;
-    z-index: 10;
+/* 4th behind */
+.gallery-3d-card.gallery-pos-4 {
+    z-index: 16;
+    transform: scale(0.76) translateX(-240px) rotateY(12deg);
+    filter: brightness(0.8);
+    opacity: 1;
+}
+
+/* 5th behind */
+.gallery-3d-card.gallery-pos-5 {
+    z-index: 15;
+    transform: scale(0.68) translateX(-300px) rotateY(12deg);
+    filter: brightness(0.75);
+    opacity: 1;
+}
+
+/* 6th behind */
+.gallery-3d-card.gallery-pos-6 {
+    z-index: 14;
+    transform: scale(0.60) translateX(-360px) rotateY(12deg);
+    filter: brightness(0.7);
+    opacity: 1;
+}
+
+/* Further items hidden */
+.gallery-3d-card.gallery-pos-hidden {
+    z-index: 1;
+    transform: scale(0.5) translateX(-400px) rotateY(12deg);
+    opacity: 0;
     pointer-events: none;
-}
-
-.gallery-marquee::before {
-    left: 0;
-    background: linear-gradient(90deg, var(--color-white) 0%, transparent 100%);
-}
-
-.gallery-marquee::after {
-    right: 0;
-    background: linear-gradient(270deg, var(--color-white) 0%, transparent 100%);
-}
-
-@keyframes marquee {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
-/* Reverse direction for second row */
-.gallery-marquee__track--reverse {
-    animation-direction: reverse;
 }
 
 /* =====================================================

@@ -318,3 +318,149 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     resize();
     requestAnimationFrame(animate);
 })();
+
+// 3D Gallery Animation
+(() => {
+    // Old guard clause removed
+
+
+
+    const galleryContainer = document.querySelector('.gallery-3d-content');
+    const items = document.querySelectorAll('.gallery-3d-item');
+
+    // Configuration
+    const CONFIG = {
+        speed: 0.8, // Pixels per frame
+        cardWidth: 460, // Match new CSS width (15% larger)
+        // cardWidth will be dynamic in initTicker to match CSS if we want, or just fixed logic
+        gap: 60, // Spacing
+        heroX: 0.5, // Center of container (0.5 = 50%)
+        zScale: 300, // Deeper depth
+        rotationMax: 50, // Max rotation
+        scaleMin: 0.5 // Scale down to 50% at edges
+    };
+
+    // State
+    let scrollPos = 0;
+    let totalWidth = 0;
+    let itemSpacing = 0;
+
+    // Check mobile or desktop size for config overrides
+    const updateConfig = () => {
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) {
+            CONFIG.cardWidth = window.innerWidth * 0.75; // Slightly larger on mobile too
+            CONFIG.gap = 20;
+        } else {
+            CONFIG.cardWidth = 460;
+            CONFIG.gap = 60;
+        }
+        itemSpacing = CONFIG.cardWidth + CONFIG.gap;
+    };
+
+    function initTicker() {
+        if (!galleryContainer || items.length === 0) return;
+
+        updateConfig();
+
+        // Calculate total width of the virtual track
+        totalWidth = items.length * itemSpacing;
+
+        // Start the loop
+        requestAnimationFrame(renderLoop);
+    }
+
+    function renderLoop() {
+        // 1. Update Scroll
+        scrollPos -= CONFIG.speed;
+
+        // 2. Get Container Dimensions
+        const containerRect = galleryContainer.getBoundingClientRect();
+        const containerWidth = containerRect.width;
+
+        // Hero position in pixels (center)
+        const heroPixel = containerWidth * CONFIG.heroX;
+
+        // 3. Render Each Item
+        items.forEach((item, index) => {
+            // A. Calculate Raw Position on Track
+            let rawX = scrollPos + (index * itemSpacing);
+
+            // B. Wrap Logic (Modulo)
+            // Range for clean wrapping needs to cover the active view plus buffers.
+            // We want smooth infinite scroll.
+
+            // Adjust wrap so it happens far off-screen
+            const wrapOffset = CONFIG.cardWidth * 2;
+
+            // Standard modulo wrap
+            let wrappedX = ((rawX + wrapOffset) % totalWidth);
+            if (wrappedX < 0) wrappedX += totalWidth;
+            wrappedX -= wrapOffset;
+
+            // C. Reactive Transforms based on position relative to Hero
+            // Distance from Hero point (center)
+            const dist = wrappedX - heroPixel + (CONFIG.cardWidth / 2);
+            // Note: wrappedX is left edge. Center of card is left + width/2.
+            // Let's calculate distance from Card Center to Hero Pixel.
+            const cardCenter = wrappedX + (CONFIG.cardWidth / 2);
+            const distFromCenter = cardCenter - heroPixel;
+
+            // Normalized distance (-1 to 1 range roughly based on container width)
+            const maxDist = containerWidth / 1.5; // Influence range
+            const progress = Math.min(Math.abs(distFromCenter) / maxDist, 1);
+
+            // Scale: 1.0 at center, drops to scaleMin
+            let scale = 1 - (progress * (1 - CONFIG.scaleMin));
+
+            // Opacity: Fade out near edges
+            let opacity = 1;
+            if (progress > 0.6) {
+                opacity = 1 - ((progress - 0.6) * 2.5); // Fade from 0.6 to 1.0
+            }
+            if (opacity < 0) opacity = 0;
+
+            // Rotation: tilt away from center
+            // Left of center (negative dist): rotate positive (face right)
+            // Right of center (positive dist): rotate negative (face left)
+            let rotateY = 0;
+            if (distFromCenter < 0) {
+                rotateY = progress * CONFIG.rotationMax;
+            } else {
+                rotateY = progress * -CONFIG.rotationMax;
+            }
+
+            // Z-Index: closer to center = higher
+            let zIndex = 100 - Math.floor(progress * 100);
+
+            // D. Apply
+            // Fix vertical alignment: explicitly center
+            item.style.zIndex = zIndex;
+            item.style.width = `${CONFIG.cardWidth}px`; // Force width from JS to match logic
+
+            // On Mobile we need to adjust height or let CSS handle it?
+            // Let's set generic height or reset it. 
+            // CSS has height: 600px. Let's rely on CSS aspect ratio or fixed height?
+            // Let's just update transform. width is handled.
+
+            item.style.transform = `
+                translate3d(${wrappedX}px, -50%, 0) 
+                scale(${scale}) 
+                rotateY(${rotateY}deg)
+            `;
+            item.style.opacity = opacity;
+        });
+
+        requestAnimationFrame(renderLoop);
+    }
+
+    // Initialize
+    initTicker();
+
+    // Handle Resize
+    window.addEventListener('resize', () => {
+        updateConfig();
+        // Recalc total width if needed
+        totalWidth = items.length * itemSpacing;
+    });
+})();
