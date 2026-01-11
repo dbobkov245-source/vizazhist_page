@@ -250,6 +250,110 @@ img {
 .nav__cta {
     font-size: 0.75rem;
     padding: 0.75rem 1.5rem;
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .nav__cta {
+        display: inline-flex;
+    }
+}
+
+/* Burger Button */
+.nav__burger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    z-index: 1001;
+}
+
+.nav__burger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-text);
+    transition: transform var(--transition), opacity var(--transition);
+}
+
+.nav__burger.active span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.nav__burger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav__burger.active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+@media (min-width: 768px) {
+    .nav__burger {
+        display: none;
+    }
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-bg);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-menu.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-menu__nav {
+    text-align: center;
+}
+
+.mobile-menu__links {
+    list-style: none;
+    margin-bottom: var(--space-xl);
+}
+
+.mobile-menu__link {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 400;
+    padding: var(--space-sm) 0;
+    color: var(--color-text);
+    transition: color var(--transition);
+}
+
+.mobile-menu__link:hover {
+    color: var(--color-primary);
+}
+
+.mobile-menu__cta {
+    font-size: 1rem;
+    padding: 1rem 2.5rem;
+}
+
+@media (min-width: 768px) {
+    .mobile-menu {
+        display: none;
+    }
 }
 
 /* =====================================================
@@ -1169,6 +1273,259 @@ img {
 }
 
 /* =====================================================
+   SECTION DIVIDERS - SVG Waves
+===================================================== */
+.section-wave {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.section-wave svg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.section-wave--top {
+    margin-bottom: -1px;
+}
+
+.section-wave--bottom {
+    margin-top: -1px;
+    transform: rotate(180deg);
+}
+
+.section-wave--white svg path {
+    fill: var(--color-white);
+}
+
+.section-wave--bg svg path {
+    fill: var(--color-bg);
+}
+
+/* =====================================================
+   GRADIENT MASKS - Smooth section transitions
+===================================================== */
+.section-gradient-top {
+    position: relative;
+}
+
+.section-gradient-top::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(180deg, var(--color-bg) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.section-gradient-bottom {
+    position: relative;
+}
+
+.section-gradient-bottom::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(0deg, var(--color-bg) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* =====================================================
+   3D CARD EFFECT - Perspective hover
+===================================================== */
+.card-3d {
+    perspective: 1000px;
+}
+
+.card-3d-inner {
+    transition: transform var(--transition);
+    transform-style: preserve-3d;
+}
+
+.card-3d:hover .card-3d-inner {
+    transform: rotateY(-5deg) rotateX(3deg);
+}
+
+/* Apply 3D effect to services cards */
+.services__card {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.services__card:hover {
+    transform: rotateY(-3deg) rotateX(2deg) translateY(-5px);
+    border-color: var(--color-accent);
+    box-shadow:
+        rgba(0, 0, 0, 0.1) 0px 20px 40px,
+        rgba(0, 0, 0, 0.05) 0px 10px 20px,
+        rgba(233, 168, 160, 0.2) 0px 0px 0px 1px;
+}
+
+/* Apply 3D effect to portfolio items */
+.portfolio__item {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    transition: transform var(--transition);
+}
+
+.portfolio__item:hover {
+    transform: rotateY(-3deg) rotateX(2deg) scale(1.02);
+}
+
+/* =====================================================
+   MULTI-LAYER SHADOWS
+===================================================== */
+.shadow-layered {
+    box-shadow:
+        rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
+        rgba(0, 0, 0, 0.05) 0px 1px 0px 0px,
+        rgba(255, 255, 255, 0.15) 0px 0px 0px 1px;
+}
+
+/* Enhanced button shadows */
+.btn {
+    box-shadow:
+        rgba(0, 0, 0, 0.05) 0px 1px 2px,
+        rgba(0, 0, 0, 0.03) 0px 2px 4px;
+}
+
+.btn:hover {
+    box-shadow:
+        rgba(0, 0, 0, 0.1) 0px 4px 8px,
+        rgba(0, 0, 0, 0.05) 0px 2px 4px,
+        rgba(233, 168, 160, 0.3) 0px 0px 0px 2px;
+}
+
+.btn--filled {
+    box-shadow:
+        rgba(233, 168, 160, 0.3) 0px 4px 12px,
+        rgba(0, 0, 0, 0.05) 0px 1px 2px;
+}
+
+.btn--filled:hover {
+    box-shadow:
+        rgba(44, 37, 37, 0.2) 0px 8px 20px,
+        rgba(0, 0, 0, 0.1) 0px 4px 8px;
+}
+
+/* Enhanced card shadows */
+.reviews__card {
+    box-shadow:
+        rgba(0, 0, 0, 0.04) 0px 4px 12px,
+        rgba(0, 0, 0, 0.02) 0px 1px 4px;
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.reviews__card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        rgba(0, 0, 0, 0.08) 0px 12px 24px,
+        rgba(0, 0, 0, 0.04) 0px 4px 8px;
+}
+
+/* =====================================================
+   IMAGE MARQUEE / GALLERY SLIDER
+===================================================== */
+.gallery-marquee {
+    padding: var(--space-2xl) 0;
+    background-color: var(--color-white);
+    overflow: hidden;
+    position: relative;
+    transform: rotate(-3deg) scale(1.1);
+    margin: var(--space-lg) 0;
+}
+
+/* Remove header styles - no longer needed */
+
+.gallery-marquee__track {
+    display: flex;
+    gap: var(--space-md);
+    width: max-content;
+    animation: marquee 30s linear infinite;
+}
+
+.gallery-marquee:hover .gallery-marquee__track {
+    animation-play-state: paused;
+}
+
+.gallery-marquee__item {
+    flex-shrink: 0;
+    width: 280px;
+    height: 350px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+}
+
+@media (min-width: 768px) {
+    .gallery-marquee__item {
+        width: 320px;
+        height: 400px;
+    }
+}
+
+.gallery-marquee__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition);
+}
+
+.gallery-marquee__item:hover img {
+    transform: scale(1.05);
+}
+
+/* Gradient masks for marquee edges */
+.gallery-marquee::before,
+.gallery-marquee::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.gallery-marquee::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--color-white) 0%, transparent 100%);
+}
+
+.gallery-marquee::after {
+    right: 0;
+    background: linear-gradient(270deg, var(--color-white) 0%, transparent 100%);
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Reverse direction for second row */
+.gallery-marquee__track--reverse {
+    animation-direction: reverse;
+}
+
+/* =====================================================
    UTILITIES
 ===================================================== */
 @media (prefers-reduced-motion: reduce) {
@@ -1178,5 +1535,9 @@ img {
     *::after {
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
+    }
+
+    .gallery-marquee__track {
+        animation: none;
     }
 }

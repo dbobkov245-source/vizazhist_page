@@ -1,3 +1,41 @@
+// Mobile Menu Toggle
+(() => {
+    const burger = document.getElementById('navBurger');
+    const menu = document.getElementById('mobileMenu');
+    const links = menu?.querySelectorAll('.mobile-menu__link');
+    const cta = menu?.querySelector('.mobile-menu__cta');
+
+    if (!burger || !menu) return;
+
+    const toggleMenu = () => {
+        const isOpen = menu.classList.contains('active');
+        menu.classList.toggle('active');
+        burger.classList.toggle('active');
+        burger.setAttribute('aria-expanded', !isOpen);
+        document.body.style.overflow = isOpen ? '' : 'hidden';
+    };
+
+    const closeMenu = () => {
+        menu.classList.remove('active');
+        burger.classList.remove('active');
+        burger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    };
+
+    burger.addEventListener('click', toggleMenu);
+
+    // Close menu on link click
+    links?.forEach(link => link.addEventListener('click', closeMenu));
+    cta?.addEventListener('click', closeMenu);
+
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && menu.classList.contains('active')) {
+            closeMenu();
+        }
+    });
+})();
+
 // Sticky Navigation
 (() => {
     const nav = document.getElementById('nav');
