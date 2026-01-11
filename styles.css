@@ -42,6 +42,7 @@
 html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
 }
 
 body {
@@ -309,17 +310,13 @@ img {
     bottom: 0;
     background-color: var(--color-bg);
     z-index: 999;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .mobile-menu.active {
-    opacity: 1;
-    visibility: visible;
+    display: flex;
 }
 
 .mobile-menu__nav {
@@ -352,7 +349,7 @@ img {
 
 @media (min-width: 768px) {
     .mobile-menu {
-        display: none;
+        display: none !important;
     }
 }
 
@@ -1453,6 +1450,7 @@ img {
 
 .gallery-marquee__track {
     display: flex;
+    flex-wrap: nowrap;
     gap: var(--space-md);
     width: max-content;
     animation: marquee 30s linear infinite;
@@ -1463,7 +1461,7 @@ img {
 }
 
 .gallery-marquee__item {
-    flex-shrink: 0;
+    flex: 0 0 auto;
     width: 280px;
     height: 350px;
     border-radius: var(--radius);
