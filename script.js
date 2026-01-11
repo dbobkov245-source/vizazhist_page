@@ -134,6 +134,7 @@
         const currentHeight = initialState.height + (targetHeight - initialState.height) * progress;
 
         // Interpolate position from original center to viewport center
+        // Interpolate position from original center to viewport center
         const targetCenterX = viewportWidth / 2;
         const targetCenterY = viewportHeight / 2;
         const currentCenterX = initialState.centerX + (targetCenterX - initialState.centerX) * progress;
@@ -154,6 +155,8 @@
             if (fixedPortrait.classList.contains('active')) {
                 fixedPortrait.classList.remove('active');
                 portraitOriginal.style.visibility = 'visible';
+                // Reset inline opacity when deactivating to be clean
+                fixedPortrait.style.opacity = '';
             }
         }
 
@@ -185,7 +188,9 @@
         // Hide fixed portrait after hero section ends
         if (progress >= 0.98) {
             fixedPortrait.style.opacity = '0';
-        } else if (progress > 0.02) {
+        } else {
+            // Ensure opacity is 1 if we are active and not at the end
+            // This fixes the gap where opacity might stick at 0 if scrolling up
             fixedPortrait.style.opacity = '1';
         }
 
@@ -199,11 +204,15 @@
         }
     };
 
-    // Recalculate on resize
-    window.addEventListener('resize', () => {
+    // Recalculate on resize and load
+    const recalc = () => {
         initialState = getInitialState();
         updateZoom();
-    }, { passive: true });
+    };
+
+    window.addEventListener('resize', recalc, { passive: true });
+    // Also listen for load to ensure image dimensions are correct
+    window.addEventListener('load', recalc);
 
     window.addEventListener('scroll', onScroll, { passive: true });
     updateZoom();
