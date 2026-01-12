@@ -110,35 +110,35 @@
         // Calculate scroll progress (0 to 1) through the wrapper
         const scrolled = -wrapperRect.top;
         const scrollRange = wrapperHeight - viewportHeight;
-        const progress = Math.max(0, Math.min(1, scrolled / scrollRange));
+        const rawProgress = Math.max(0, Math.min(1, scrolled / scrollRange));
+
+        // Linear progress for zoom (synced with scroll)
+        const progress = rawProgress;
 
         // Calculate target size to fully cover viewport
-        // Use the larger of viewport dimensions to ensure full coverage
         const aspectRatio = initialState.width / initialState.height;
         let targetWidth, targetHeight;
 
-        // Calculate sizes needed to cover the viewport completely
-        // considering the aspect ratio of the original portrait
         if (viewportWidth / viewportHeight > aspectRatio) {
-            // Viewport is wider than portrait, scale by width
-            targetWidth = viewportWidth * 1.05; // 5% extra for safety
+            targetWidth = viewportWidth * 1.1;
             targetHeight = targetWidth / aspectRatio;
         } else {
-            // Viewport is taller than portrait, scale by height
-            targetHeight = viewportHeight * 1.05;
+            targetHeight = viewportHeight * 1.1;
             targetWidth = targetHeight * aspectRatio;
         }
 
-        // Interpolate state based on progress
-        const currentWidth = initialState.width + (targetWidth - initialState.width) * progress;
-        const currentHeight = initialState.height + (targetHeight - initialState.height) * progress;
+        // Zoom completes at 90% of scroll, last 10% is for fade out
+        const zoomProgress = Math.min(1, progress / 0.9);
 
-        // Interpolate position from original center to viewport center
+        // Interpolate state based on zoom progress
+        const currentWidth = initialState.width + (targetWidth - initialState.width) * zoomProgress;
+        const currentHeight = initialState.height + (targetHeight - initialState.height) * zoomProgress;
+
         // Interpolate position from original center to viewport center
         const targetCenterX = viewportWidth / 2;
         const targetCenterY = viewportHeight / 2;
-        const currentCenterX = initialState.centerX + (targetCenterX - initialState.centerX) * progress;
-        const currentCenterY = initialState.centerY + (targetCenterY - initialState.centerY) * progress;
+        const currentCenterX = initialState.centerX + (targetCenterX - initialState.centerX) * zoomProgress;
+        const currentCenterY = initialState.centerY + (targetCenterY - initialState.centerY) * zoomProgress;
 
         // Apply to fixed portrait
         fixedPortrait.style.width = `${currentWidth}px`;
@@ -146,7 +146,7 @@
         fixedPortrait.style.transform = `translate(${currentCenterX - currentWidth / 2}px, ${currentCenterY - currentHeight / 2}px)`;
 
         // Show/hide fixed portrait and original
-        if (progress > 0.005) { // Smaller threshold for instant hand-off
+        if (rawProgress > 0.005) {
             if (!fixedPortrait.classList.contains('active')) {
                 fixedPortrait.classList.add('active');
                 portraitOriginal.style.visibility = 'hidden';
@@ -155,42 +155,39 @@
             if (fixedPortrait.classList.contains('active')) {
                 fixedPortrait.classList.remove('active');
                 portraitOriginal.style.visibility = 'visible';
-                // Reset inline opacity when deactivating to be clean
                 fixedPortrait.style.opacity = '';
             }
         }
 
-        // Remove border-radius when expanding (earlier to ensure smooth transition)
-        if (progress > 0.2) {
+        // Remove border-radius when expanding
+        if (rawProgress > 0.15) {
             fixedPortrait.classList.add('fullscreen');
         } else {
             fixedPortrait.classList.remove('fullscreen');
         }
 
-        // Hide navigation earlier in the scroll to prevent text overlap
+        // Hide navigation
         if (nav) {
-            if (progress > 0.15) {
+            if (rawProgress > 0.1) {
                 nav.classList.add('hidden');
             } else {
                 nav.classList.remove('hidden');
             }
         }
 
-        // Fade out text content as zoom progresses
-        const fadeThreshold = 0.05;
-        if (progress > fadeThreshold) {
-            const fadeProgress = Math.min(1, (progress - fadeThreshold) / 0.15);
+        // Fade out text content quickly
+        if (rawProgress > 0.02) {
+            const fadeProgress = Math.min(1, (rawProgress - 0.02) / 0.08);
             content.style.opacity = 1 - fadeProgress;
         } else {
             content.style.opacity = 1;
         }
 
-        // Hide fixed portrait after hero section ends
-        if (progress >= 0.98) {
-            fixedPortrait.style.opacity = '0';
+        // Fade out portrait: starts at 90%, ends at 100% (synced with end of wrapper)
+        if (rawProgress >= 0.9) {
+            const fadeOutProgress = (rawProgress - 0.9) / 0.1;
+            fixedPortrait.style.opacity = String(Math.max(0, 1 - fadeOutProgress));
         } else {
-            // Ensure opacity is 1 if we are active and not at the end
-            // This fixes the gap where opacity might stick at 0 if scrolling up
             fixedPortrait.style.opacity = '1';
         }
 
@@ -472,4 +469,27 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         // Recalc total width if needed
         totalWidth = items.length * itemSpacing;
     });
+})();
+
+// Scroll Reveal Animation (fade-up elements)
+(() => {
+    const fadeElements = document.querySelectorAll('.fade-up');
+    if (fadeElements.length === 0) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                // Staggered animation delay based on element index within viewport
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
+                }, index * 100);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    fadeElements.forEach(el => observer.observe(el));
 })();

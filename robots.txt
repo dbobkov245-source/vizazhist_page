@@ -1,0 +1,27 @@
+# Robots.txt для сайта визажиста Алины
+
+User-agent: *
+Allow: /
+
+# Запрет индексации служебных файлов
+Disallow: /convert-images.js
+Disallow: /node_modules/
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /*.md$
+
+# Карта сайта
+Sitemap: https://YOUR-DOMAIN.ru/sitemap.xml
+
+# Основные поисковые системы
+User-agent: Googlebot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+User-agent: Mail.Ru
+Allow: /
+
+User-agent: Bingbot
+Allow: /
