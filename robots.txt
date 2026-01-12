@@ -11,7 +11,7 @@ Disallow: /package-lock.json
 Disallow: /*.md$
 
 # Карта сайта
-Sitemap: https://YOUR-DOMAIN.ru/sitemap.xml
+Sitemap: https://alina-makeup.pages.dev/sitemap.xml
 
 # Основные поисковые системы
 User-agent: Googlebot
