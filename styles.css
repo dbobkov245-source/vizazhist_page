@@ -418,7 +418,8 @@ img {
 
 /* Wrapper for scroll-based animation */
 .hero-wrapper {
-    height: 250vh;
+    height: 350vh;
+    /* Increased from 250vh for slower, smoother zoom */
     position: relative;
 }
 
