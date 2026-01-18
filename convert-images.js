@@ -86,30 +86,36 @@ async function convertFavicon() {
 }
 
 /**
- * Конвертация изображений из папки 1/ в .webp
+ * Конвертация изображений из папки portfolio/ в .webp
  */
-async function convertGalleryImages() {
-    if (!fs.existsSync(GALLERY_DIR)) {
-        console.log('⚠️  Папка 1/ не найдена, пропускаем галерею...');
+async function convertPortfolioImages() {
+    const PORTFOLIO_DIR = path.join(PROJECT_DIR, 'portfolio');
+
+    if (!fs.existsSync(PORTFOLIO_DIR)) {
+        console.log('⚠️  Папка portfolio/ не найдена, пропускаем...');
         return;
     }
 
-    console.log('\n🖼️  Обработка изображений галереи (папка 1/)...');
+    console.log('\n🖼️  Обработка изображений портфолио (папка portfolio/)...');
 
-    const files = fs.readdirSync(GALLERY_DIR);
-    const imageFiles = files.filter(f => /\.(jpg|jpeg|png)$/i.test(f));
+    const files = fs.readdirSync(PORTFOLIO_DIR);
+    // Added HEIC to regex
+    const imageFiles = files.filter(f => /\.(jpg|jpeg|png|heic)$/i.test(f));
 
     if (imageFiles.length === 0) {
-        console.log('⚠️  Изображения .jpg/.png в папке 1/ не найдены');
+        console.log('⚠️  Изображения .jpg/.png/.heic в папке portfolio/ не найдены');
         return;
     }
 
     console.log(`📁 Найдено изображений: ${imageFiles.length}\n`);
 
     for (const file of imageFiles) {
-        const inputPath = path.join(GALLERY_DIR, file);
+        const inputPath = path.join(PORTFOLIO_DIR, file);
         const baseName = path.basename(file, path.extname(file));
-        const outputPath = path.join(OUTPUT_DIR, `${baseName}.webp`);
+        const outputPath = path.join(PORTFOLIO_DIR, `${baseName}.webp`);
+
+        // Skip if webp already exists and is newer? 
+        // For now, just overwrite or process.
 
         try {
             await sharp(inputPath)
@@ -121,10 +127,10 @@ async function convertGalleryImages() {
             const savings = ((1 - outputStats.size / inputStats.size) * 100).toFixed(1);
 
             console.log(`  ✅ ${file} → ${baseName}.webp (экономия ${savings}%)`);
-            results.success.push(`1/${baseName}.webp`);
+            results.success.push(`portfolio/${baseName}.webp`);
         } catch (err) {
             console.error(`  ❌ Ошибка: ${file} - ${err.message}`);
-            results.failed.push(`1/${file}`);
+            results.failed.push(`portfolio/${file}`);
         }
     }
 }
@@ -138,7 +144,9 @@ async function main() {
     console.log('═'.repeat(50));
 
     await convertFavicon();
-    await convertGalleryImages();
+    // await convertGalleryImages(); // Old gallery dir was '1', new is 'portfolio' presumably or both.
+    // The user said "added photos to portfolio folder", so let's process that.
+    await convertPortfolioImages();
 
     // Итоговый отчёт
     console.log('\n' + '═'.repeat(50));
